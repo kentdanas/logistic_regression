@@ -172,8 +172,8 @@ def ovo(x_train, y, x_test, lamdas, t_init, classes, epsilon=0.001):
     num_models = int(classes * (classes - 1) / 2)
     predictions = np.empty([x_test.shape[0], num_models])
     iter = 0
-    for i in range(1, classes+1):
-        for j in range(1, classes+1):
+    for i in range(0, classes):
+        for j in range(0, classes):
             if j > i:
                 # Subset data to only two classes being trained on
                 idx = np.where((y == i) | (y == j))
