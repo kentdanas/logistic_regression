@@ -39,9 +39,10 @@ def computegrad(beta, lamda, x, y):
     :return: gradient vector
     """
     n, d = x.shape
-    h = np.exp(-y*(x.dot(beta)))
-    p = np.diagflat((h/(1+h)))
-    gradient = (-x.T.dot(p.dot(y)) / n) + (2*lamda*beta)
+    y_x = y[:, np.newaxis] * x
+    h = 1 + np.exp(-y_x.dot(beta))
+    gradient = (np.sum(-y_x*np.exp(-y_x.dot(beta[:, np.newaxis]))/h[:, np.newaxis],axis=0)/n)\
+               + (2*lamda*beta)
     return gradient
 
 
@@ -169,7 +170,7 @@ def ovo(x_train, y, x_test, lamdas, t_init, classes, epsilon=0.001):
     :return: final_predictions: vector of predicted classes for test set
     """
     num_models = int(classes * (classes - 1) / 2)
-    predictions = np.empty([birds_x_test.shape[0], num_models])
+    predictions = np.empty([x_test.shape[0], num_models])
     iter = 0
     for i in range(1, classes+1):
         for j in range(1, classes+1):
@@ -202,4 +203,4 @@ def ovo(x_train, y, x_test, lamdas, t_init, classes, epsilon=0.001):
 
     # Get final predictions by taking most common class from one-vs-one predictions
     final_predictions = stats.mode(predictions, axis=1)[0]
-    return final_predictions
+    return final_predictions[:, 0]
