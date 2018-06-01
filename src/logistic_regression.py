@@ -147,7 +147,7 @@ def crossval(beta, x, y, lamdas, folds=3):
 
             # Calculate and store misclassification error
             y_hat = beta_vals[-1].dot(x_test.T)
-            error.append(np.sum((y_hat - y_test)**2))
+            error.append(1 - np.mean((y_hat == y_test)))
         errors.append(error)
     # Calculate average error and return lambda associated with lowest error
     avg_err = np.mean(errors, axis=1)
